@@ -1,5 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Sequelize from "sequelize";
+dotenv.config();
+import dotenv from "dotenv";
 import User from "../models/userModel.js";
 import cloudinary from "../utils/cloudinaryConfig.js";
 import fs from "fs";
