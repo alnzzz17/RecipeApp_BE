@@ -11,13 +11,13 @@ import {
 } from '../controllers/commentController.js';
 
 // GET ALL COMMENTS BY RECIPE
-router.get('/by-recipe/:recipeId', getCommentsByRecipe);
+router.get('/recipe/:recipeId', getCommentsByRecipe);
 
 // GET COMMENT BY ID
 router.get('/:id', getCommentById);
 
 // CREATE NEW COMMENT
-router.post('/new', verifyToken, createComment);
+router.post('/new/:recipeId', verifyToken, createComment);
 
 // UPDATE COMMENT
 router.put('/edit/:id', verifyToken, editComment);

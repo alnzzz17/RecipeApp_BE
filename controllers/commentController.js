@@ -2,17 +2,18 @@ import Comment from '../models/commentModel.js';
 import Recipe from '../models/recipeModel.js';
 import User from '../models/userModel.js';
 
-// CREATE COMMENT
+// CREATE COMMENT - TESTED
 const createComment = async (req, res) => {
     try {
-        const { recipeId, content } = req.body;
+        const { recipeId } = req.params; // ID resep dari params
+        const { content } = req.body;    // Content dari req body
         const userId = req.user.id; // Dari middleware verifyToken
 
-        // Cek apakah recipeId dan content ada
-        if (!recipeId || !content) {
+        // Cek apakah content ada (recipeId sudah didapat dari params)
+        if (!content) {
             return res.status(400).json({
                 status: "error",
-                message: "recipeId and content are required"
+                message: "content is required"
             });
         }
 
@@ -54,7 +55,7 @@ const createComment = async (req, res) => {
     }
 };
 
-// UPDATE COMMENT
+// UPDATE COMMENT - TESTED
 const editComment = async (req, res) => {
     try {
         const { id } = req.params;
@@ -111,7 +112,7 @@ const editComment = async (req, res) => {
     }
 };
 
-// DELETE COMMENT
+// DELETE COMMENT - TESTED
 const deleteComment = async (req, res) => {
     try {
         const { id } = req.params;
@@ -150,7 +151,7 @@ const deleteComment = async (req, res) => {
     }
 };
 
-// GET COMMENTS BY RECIPE
+// GET COMMENTS BY RECIPE - TESTED
 const getCommentsByRecipe = async (req, res) => {
     try {
         const { recipeId } = req.params; // Ambil recipeId dari parameter URL
@@ -188,7 +189,7 @@ const getCommentsByRecipe = async (req, res) => {
     }
 };
 
-// 5. GET COMMENT BY ID
+// GET COMMENT BY ID - TESTED
 const getCommentById = async (req, res) => {
     try {
         const { id } = req.params; // Ambil id komentar dari parameter URL
