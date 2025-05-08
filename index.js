@@ -1,9 +1,15 @@
-require('dotenv').config();
-const express = require('express');
+import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
 const app = express();
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Serve Static Files
 // app.use(express.static(path.join(__dirname, '../client')));
@@ -30,9 +36,9 @@ app.get('/', (req, res) => {
 });
 
 // Import Routers
-const userRouter = require("./routes/userRoute.js");
-const recipeRouter = require("./routes/recipeRoute.js");
-const commentRouter = require("./routes/commentRoute.js");
+import userRouter from "./routes/userRoute.js";
+import recipeRouter from "./routes/recipeRoute.js";
+import commentRouter from "./routes/commentRoute.js";
 
 // Mount Routers
 app.use("/api/user", userRouter);
@@ -57,7 +63,7 @@ app.use((req, res) => {
 });
 
 // Start Server After Syncing DB Associations
-const association = require('./utils/dbAssoc');
+import association from './utils/dbAssoc.js';
 const PORT = process.env.PORT || 5000;
 
 association()

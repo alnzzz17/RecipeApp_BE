@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "./models/userModel.js";
-import cloudinary from "./utils/cloudinaryConfig.js";
+import User from "../models/userModel.js";
+import cloudinary from "../utils/cloudinaryConfig.js";
 import fs from "fs";
 
 // REGISTER NEW USER
@@ -32,7 +32,6 @@ const postUser = async (req, res) => {
             email,
             password: hashedPassword,
             fullName,
-            headline,
             profilePicture: process.env.DEFAULT_PROFILE_PICTURE_URL,
         });
 

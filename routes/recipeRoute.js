@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import verifyToken from '../middlewares/verifyToken.js';
-import upload from '../utils/fileUpload.js';
+import upload from '../middlewares/fileUpload.js';
 
 import {
     createRecipe,

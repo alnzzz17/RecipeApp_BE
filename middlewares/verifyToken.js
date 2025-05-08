@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
-export const verifyToken = async (req, res, next) => {
+const verifyToken = async (req, res, next) => {
     try {
         // Check for Authorization header
         const authHeader = req.headers['authorization'] || req.headers['Authorization'];
@@ -60,3 +60,5 @@ export const verifyToken = async (req, res, next) => {
         });
     }
 };
+
+export default verifyToken;

@@ -1,4 +1,6 @@
 import { Sequelize } from "sequelize";
+dotenv.config();
+import dotenv from 'dotenv';
 
 const db_username = process.env.DB_USERNAME;
 const db_password = process.env.DB_PASSWORD;
@@ -12,4 +14,4 @@ const sequelize = new Sequelize(db_name, db_username, db_password, {
     timezone: '+07:00'
 });
 
-export default db;
+export default sequelize;
