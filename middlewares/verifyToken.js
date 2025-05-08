@@ -1,3 +1,5 @@
+dotenv.config();
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
@@ -17,7 +19,7 @@ const verifyToken = async (req, res, next) => {
         const token = authHeader.split(' ')[1];
         
         // Verify token
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const decoded = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
         
         // Check if user still exists
         const user = await User.findByPk(decoded.id, {

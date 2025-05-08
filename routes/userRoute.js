@@ -10,6 +10,7 @@ import {
     deleteUser,
     editUser,
     getUserById,
+    getAllUsers
 } from '../controllers/userController.js';
 
 // REGISTER USER
@@ -18,6 +19,9 @@ router.post('/register', postUser);
 // USER LOGIN
 router.post('/login', loginHandler);
 
+// GET ALL USERS
+router.get('/all', getAllUsers);
+
 // USER LOGOUT
 router.post('/logout', verifyToken, logoutHandler);
 
@@ -25,7 +29,7 @@ router.post('/logout', verifyToken, logoutHandler);
 router.get('/:id', verifyToken, getUserById);
 
 // EDIT USER PROFILE (with optional file upload)
-router.put('/edit', verifyToken, upload.single('profilePicture'), editUser);
+router.put('/edit/:id', verifyToken, upload.single('profilePicture'), editUser);
 
 // DELETE USER
 router.delete('/delete/:id', verifyToken, deleteUser); 

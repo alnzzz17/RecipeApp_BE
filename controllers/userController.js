@@ -1,13 +1,13 @@
+dotenv.config();
+import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Sequelize from "sequelize";
-dotenv.config();
-import dotenv from "dotenv";
 import User from "../models/userModel.js";
 import cloudinary from "../utils/cloudinaryConfig.js";
 import fs from "fs";
 
-// REGISTER NEW USER
+// REGISTER NEW USER - TESTED
 const postUser = async (req, res) => {
     try {
         const { username, email, password, fullName } = req.body;
@@ -67,7 +67,7 @@ const postUser = async (req, res) => {
     }
 };
 
-// USER LOGIN
+// USER LOGIN - TESTED
 const loginHandler = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -88,13 +88,13 @@ const loginHandler = async (req, res) => {
                 // Generate tokens
                 const accessToken = jwt.sign(
                     safeUserData,
-                    process.env.ACCESS_TOKEN_SECRET,
+                    process.env.ACCESS_SECRET_KEY,
                     { expiresIn: "30m" }
                 );
 
                 const refreshToken = jwt.sign(
                     safeUserData,
-                    process.env.REFRESH_TOKEN_SECRET,
+                    process.env.REFRESH_SECRET_KEY,
                     { expiresIn: "1d" }
                 );
 
@@ -105,7 +105,7 @@ const loginHandler = async (req, res) => {
                 res.cookie("refreshToken", refreshToken, {
                     httpOnly: false,
                     sameSite: "none",
-                    secure: true,
+                    secure: false,
                     maxAge: 24 * 60 * 60 * 1000,
                 });
 
@@ -176,6 +176,7 @@ const logoutHandler = async (req, res) => {
     }
 };
 
+// DELETE USER ACCOUNT
 const deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
@@ -225,23 +226,21 @@ const deleteUser = async (req, res) => {
     }
 };
 
-// EDIT USER ACCOUNT
+// EDIT USER ACCOUNT - TESTED
 const editUser = async (req, res) => {
     try {
-        const authorization = req.headers.authorization;
+        const { id } = req.params;
+        const loggedInUserId = req.user.id; // Dari verifyToken middleware
 
-        if (!authorization || !authorization.startsWith("Bearer ")) {
+        // Memastikan user yang ingin diupdate adalah user yang sedang login
+        if (parseInt(id) !== loggedInUserId) {
             return res.status(403).json({
                 status: "error",
-                message: "You need to login",
+                message: "Forbidden: You can only edit your own account"
             });
         }
 
-        const token = authorization.substring(7);
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        const loggedInUserId = decoded.id;
-
-        const userToUpdate = await User.findByPk(loggedInUserId);
+        const userToUpdate = await User.findByPk(id);
         if (!userToUpdate) {
             return res.status(404).json({
                 status: "error",
@@ -265,10 +264,7 @@ const editUser = async (req, res) => {
 
         if (file) {
             // Delete old image from Cloudinary if exists and not default
-            if (
-                userToUpdate.profilePicture &&
-                !userToUpdate.profilePicture.endsWith("default.jpg")
-            ) {
+            if (userToUpdate.profilePicture && !userToUpdate.profilePicture.endsWith("default.jpg")) {
                 const publicId = userToUpdate.profilePicture
                     .split("/")
                     .pop()
@@ -293,7 +289,7 @@ const editUser = async (req, res) => {
 
         await userToUpdate.update(updatedFields);
 
-        const updatedUser = await User.findByPk(loggedInUserId, {
+        const updatedUser = await User.findByPk(id, {
             attributes: [
                 "id",
                 "username",
@@ -352,6 +348,35 @@ const getUserById = async (req, res) => {
     }
 };
 
+// GET ALL USERS
+const getAllUsers = async (req, res) => {
+    try {
+        // Ambil semua user dari database
+        const users = await User.findAll({
+            attributes: [
+                "id",
+                "username",
+                "email",
+                "fullName",
+                "headline",
+                "profilePicture",
+                "createdAt"
+            ],
+            order: [['id', 'ASC']] // Diurutkan berdasarkan ID
+        });
+
+        res.status(200).json({
+            status: "success",
+            data: users
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: "error",
+            message: error.message
+        });
+    }
+};
+
 export {
     postUser,
     loginHandler,
@@ -359,4 +384,5 @@ export {
     deleteUser,
     editUser,
     getUserById,
+    getAllUsers
 };

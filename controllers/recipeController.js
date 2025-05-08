@@ -155,7 +155,7 @@ const deleteRecipe = async (req, res) => {
         // Hapus gambar dari Cloudinary jika ada
         if (recipe.imageUrl) {
             const publicId = recipe.imageUrl.split('/').pop().split('.')[0];
-            await cloudinary.uploader.destroy(`Recipe_Images/${publicId}`);
+            await cloudinary.uploader.destroy(`Recipe-App/Recipe_Images/${publicId}`);
         }
 
         // Hapus resep
