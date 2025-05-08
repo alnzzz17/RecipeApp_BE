@@ -98,6 +98,8 @@ const loginHandler = async (req, res) => {
                     { expiresIn: "1d" }
                 );
 
+                // console.log('Refresh Token:', refreshToken);
+
                 // Update refresh token di database
                 await User.update({ refreshToken }, { where: { id: user.id } });
 
@@ -176,7 +178,7 @@ const logoutHandler = async (req, res) => {
     }
 };
 
-// DELETE USER ACCOUNT
+// DELETE USER ACCOUNT - TESTED
 const deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
@@ -269,12 +271,12 @@ const editUser = async (req, res) => {
                     .split("/")
                     .pop()
                     .split(".")[0];
-                await cloudinary.uploader.destroy(`User_Profile_Pictures/${publicId}`);
+                await cloudinary.uploader.destroy(`Recipe-App/Profile_Pictures/${publicId}`);
             }
 
             // Upload new image
             const uploadResult = await cloudinary.uploader.upload(file.path, {
-                folder: "User_Profile_Pictures",
+                folder: "Recipe-App/Profile_Pictures",
                 use_filename: true,
                 unique_filename: false,
             });

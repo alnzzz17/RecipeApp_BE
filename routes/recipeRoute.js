@@ -25,7 +25,7 @@ router.get('/:id', getRecipeById);
 router.post('/new', verifyToken, upload.single('imageUrl'), createRecipe);
 
 // UPDATE RECIPE (with file upload)
-router.put('/:id', verifyToken, upload.single('imageUrl'), updateRecipe);
+router.put('/edit/:id', verifyToken, upload.single('imageUrl'), updateRecipe);
 
 // DELETE RECIPE
 router.delete('/delete/:id', verifyToken, deleteRecipe);

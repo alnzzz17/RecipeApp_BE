@@ -1,9 +1,10 @@
 import Recipe from '../models/recipeModel.js';
 import User from '../models/userModel.js';
+import Comment from '../models/commentModel.js';
 import cloudinary from '../utils/cloudinaryConfig.js';
 import fs from 'fs';
 
-// CREATE RECIPE
+// CREATE RECIPE - TESTED
 const createRecipe = async (req, res) => {
     try {
         const { title, description, ingredients, instructions } = req.body;
@@ -58,7 +59,7 @@ const createRecipe = async (req, res) => {
     }
 };
 
-// UPDATE RECIPE
+// UPDATE RECIPE - TESTED
 const updateRecipe = async (req, res) => {
     try {
         const { id } = req.params;
@@ -129,7 +130,7 @@ const updateRecipe = async (req, res) => {
     }
 };
 
-// DELETE RECIPE
+// DELETE RECIPE - TESTED
 const deleteRecipe = async (req, res) => {
     try {
         const { id } = req.params;
@@ -174,7 +175,7 @@ const deleteRecipe = async (req, res) => {
     }
 };
 
-// GET ALL RECIPES
+// GET ALL RECIPES - TESTED
 const getAllRecipes = async (req, res) => {
     try {
 
@@ -201,7 +202,7 @@ const getAllRecipes = async (req, res) => {
     }
 };
 
-// GET RECIPES BY USER
+// GET RECIPES BY USER - TESTED
 const getRecipesByUser = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -237,7 +238,7 @@ const getRecipesByUser = async (req, res) => {
     }
 };
 
-// GET RECIPE BY ID
+// GET RECIPE BY ID - TESTED
 const getRecipeById = async (req, res) => {
     try {
         const { id } = req.params;
