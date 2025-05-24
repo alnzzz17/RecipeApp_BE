@@ -19,16 +19,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Enhanced CORS Configuration
-// Updated CORS configuration
+// CORS Configuration
 app.use(
   cors({
     origin: [
-      "http://localhost", // Covers default ports (80, 443)
+      "https://recipe-app-dot-a-11-450504.uc.r.appspot.com",
       "http://localhost:5000", // Common frontend port
       "http://127.0.0.1:5500", // Default Live Server port
       process.env.CLIENT_URL,
-    ].filter(Boolean), // Removes any falsy values (like undefined CLIENT_URL)
+    ].filter(Boolean), // Removes any falsy values
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
@@ -85,7 +84,7 @@ association()
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log(
-        `Client URL: ${process.env.CLIENT_URL || "http://localhost:5000"}`
+        `Client URL: "https://recipe-app-dot-a-11-450504.uc.r.appspot.com" || "http://localhost:5000"`
       );
     });
   })
