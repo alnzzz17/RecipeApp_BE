@@ -21,13 +21,10 @@ app.use(cookieParser());
 // CORS Configuration
 app.use(
   cors({
-    origin: [
-      "https://recipe-app-dot-a-11-450504.uc.r.appspot.com",
-      "http://localhost:5000", // Common frontend port
-    ].filter(Boolean), // Removes any falsy values
+    origin: "https://recipe-app-dot-a-11-450504.uc.r.appspot.com",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ['Authorization']
   })
 );
