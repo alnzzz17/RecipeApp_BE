@@ -20,7 +20,7 @@ Comment.belongsTo(Recipe, { foreignKey: 'recipeId' });
 // Fungsi sinkronisasi
 const association  = async () => {
     try {
-        await sequelize.sync({ force: true }); // Diubah ke true kalau mau di-drop & re-create
+        await sequelize.sync({ force: false }); // Diubah ke true kalau mau di-drop & re-create
         console.log('Database synced & associations established');
     } catch (error) {
         console.error('Association error:', error.message);
