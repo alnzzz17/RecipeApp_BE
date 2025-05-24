@@ -1,8 +1,9 @@
 import dotenv from "dotenv";
-dotenv.config();
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config(); // hanya load .env saat local dev
+}
 import express from "express";
 const app = express();
-import path from "path";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
