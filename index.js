@@ -3,13 +3,12 @@ dotenv.config();
 import express from "express";
 const app = express();
 import path from "path";
-import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
 // Get __dirname equivalent in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 // Serve Static Files
 // app.use(express.static(path.join(__dirname, '../client')));
@@ -26,27 +25,16 @@ app.use(
       "https://recipe-app-dot-a-11-450504.uc.r.appspot.com",
       "http://localhost:5000", // Common frontend port
       "http://127.0.0.1:5500", // Default Live Server port
-      process.env.CLIENT_URL,
     ].filter(Boolean), // Removes any falsy values
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    exposedHeaders: ['Authorization']
   })
 );
 
-// Handle Preflight requests more specifically
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.sendStatus(204);
-});
-
-// Default route - serve public_dashboard.html
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
+// Handle Preflight (OPTIONS)
+app.options('*', cors());
 
 // Import Routers
 import userRouter from "./routes/userRoute.js";
@@ -57,6 +45,12 @@ import commentRouter from "./routes/commentRoute.js";
 app.use("/api/user", userRouter);
 app.use("/api/recipes", recipeRouter);
 app.use("/api/comments", commentRouter);
+
+// Default route
+app.get("/", (req, res) => {
+  res.json({ message: "Hello from backend service" });
+});
+
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
