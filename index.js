@@ -24,7 +24,6 @@ app.use(
     origin: [
       "https://recipe-app-dot-a-11-450504.uc.r.appspot.com",
       "http://localhost:5000", // Common frontend port
-      "http://127.0.0.1:5500", // Default Live Server port
     ].filter(Boolean), // Removes any falsy values
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
