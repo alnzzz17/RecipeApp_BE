@@ -65,26 +65,17 @@ const updateRecipe = async (req, res) => {
         const { id } = req.params;
         const userId = req.user.id;
         
-        // Validasi input
-        if (!req.body) {
-            return res.status(400).json({
-                status: "error",
-                message: "Request body is required"
-            });
-        }
-
-        // Destructuring dengan nilai default
+        // Untuk FormData, gunakan req.body untuk text fields
         const { 
-            judul: title = '', 
-            deskripsi: description = '', 
-            bahan_bahan: ingredients = '', 
-            cara_pembuatan: instructions = '',
-            gambarLama: oldImage = '' 
+            judul: title, 
+            deskripsi: description, 
+            bahan_bahan: ingredients, 
+            cara_pembuatan: instructions,
+            gambarLama: oldImage 
         } = req.body;
 
         const file = req.file;
         
-        // Cari resep
         const recipe = await Recipe.findByPk(id);
         if (!recipe) {
             return res.status(404).json({
@@ -93,7 +84,6 @@ const updateRecipe = async (req, res) => {
             });
         }
 
-        // Verifikasi kepemilikan resep
         if (recipe.userId !== userId) {
             return res.status(403).json({
                 status: "error",
@@ -101,7 +91,6 @@ const updateRecipe = async (req, res) => {
             });
         }
 
-        // Siapkan field yang akan diupdate
         let updatedFields = {
             title: title || recipe.title,
             description: description || recipe.description,
@@ -109,18 +98,13 @@ const updateRecipe = async (req, res) => {
             instructions: instructions || recipe.instructions
         };
 
-        // Handle upload gambar baru
+        // Hanya proses upload jika ada file baru
         if (file) {
             try {
                 // Hapus gambar lama jika ada
                 if (recipe.imageUrl) {
-                    try {
-                        const publicId = recipe.imageUrl.split('/').pop().split('.')[0];
-                        await cloudinary.uploader.destroy(`Recipe-App/Recipe_Images/${publicId}`);
-                    } catch (cloudinaryError) {
-                        console.error("Error deleting old image from Cloudinary:", cloudinaryError);
-                        // Lanjutkan proses meskipun gagal hapus gambar lama
-                    }
+                    const publicId = recipe.imageUrl.split('/').pop().split('.')[0];
+                    await cloudinary.uploader.destroy(`Recipe-App/Recipe_Images/${publicId}`);
                 }
 
                 // Upload gambar baru
@@ -129,45 +113,40 @@ const updateRecipe = async (req, res) => {
                     use_filename: true,
                     unique_filename: false
                 });
+                
                 updatedFields.imageUrl = uploadResult.secure_url;
                 
-                // Hapus file temporary
+                // Hapus file temporary setelah upload
                 fs.unlink(file.path, (err) => {
                     if (err) console.error("Failed to delete temp file:", err);
                 });
             } catch (uploadError) {
-                // Hapus file temporary jika upload gagal
-                if (file.path) {
-                    fs.unlink(file.path, (err) => {
-                        if (err) console.error("Failed to delete temp file:", err);
-                    });
-                }
-                throw new Error(`Failed to upload image: ${uploadError.message}`);
+                console.error("Upload error:", uploadError);
+                return res.status(500).json({
+                    status: "error",
+                    message: "Failed to upload image"
+                });
             }
         }
 
-        // Update resep
         await recipe.update(updatedFields);
-
-        // Dapatkan data terbaru dengan include User
-        const updatedRecipe = await Recipe.findByPk(id, {
-            include: [{
-                model: User,
-                attributes: ['id', 'username', 'profilePicture']
-            }]
-        });
 
         res.status(200).json({
             status: "success",
             message: "Recipe updated successfully",
-            data: updatedRecipe
+            data: await Recipe.findByPk(id, {
+                include: [{
+                    model: User,
+                    attributes: ['id', 'username', 'profilePicture']
+                }]
+            })
         });
 
     } catch (error) {
-        console.error("Error in updateRecipe:", error);
+        console.error("Update recipe error:", error);
         res.status(500).json({
             status: "error",
-            message: error.message || "Internal server error"
+            message: error.message
         });
     }
 };
