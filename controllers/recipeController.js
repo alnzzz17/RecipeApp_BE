@@ -261,7 +261,7 @@ const getRecipeById = async (req, res) => {
                     model: Comment,
                     include: [{
                         model: User,
-                        attributes: ['id', 'username', 'profilePicture']
+                        attributes: ['id', 'username', 'profilePicture', 'headline']
                     }],
                     order: [['createdAt', 'DESC']]
                 }
