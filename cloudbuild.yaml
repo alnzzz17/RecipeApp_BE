@@ -77,7 +77,6 @@ secrets:
       REFRESH_SECRET_KEY: projects/$PROJECT_ID/secrets/REFRESH_SECRET_KEY/versions/latest
       DEFAULT_PROFILE_PICTURE_URL: projects/$PROJECT_ID/secrets/DEFAULT_PROFILE_PICTURE_URL/versions/latest
 
-
 # Log hanya akan disimpan di Google Cloud Logging
 # Log tidak akan disimpan di Google Cloud Storage (butuh hak akses).
 options:
