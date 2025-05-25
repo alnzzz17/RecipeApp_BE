@@ -23,7 +23,7 @@ const verifyToken = async (req, res, next) => {
         
         // Check if user still exists
         const user = await User.findByPk(decoded.id, {
-            attributes: ['id', 'username', 'email', 'headline', 'profilePicture']
+            attributes: ['id', 'fullName', 'username', 'email', 'headline', 'profilePicture']
         });
         
         if (!user) {
@@ -36,6 +36,7 @@ const verifyToken = async (req, res, next) => {
         // Attach user information to request object
         req.user = {
             id: user.id,
+            fullName: user.fullName,
             username: user.username,
             email: user.email,
             headline: user.headline,
