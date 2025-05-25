@@ -30,7 +30,7 @@ router.post("/logout", verifyToken, logoutHandler);
 router.get('/refresh', refreshToken);
 
 // GET CURRENT USER
-router.get('/me', getCurrentUser);
+router.get('/me', verifyToken, getCurrentUser);
 
 // GET USER BY ID
 router.get("/:id", getUserById);
