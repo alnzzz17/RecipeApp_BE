@@ -411,6 +411,33 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+// GET CURRENT USER (authenticated user's info)
+const getCurrentUser = async (req, res) => {
+    try {
+        // The user information is already available in req.user from the authentication middleware
+        const currentUser = {
+            id: req.user.id,
+            username: req.user.username,
+            email: req.user.email,
+            fullName: req.user.fullName,
+            headline: req.user.headline,
+            profilePicture: req.user.profilePicture,
+            createdAt: req.user.createdAt,
+            updatedAt: req.user.updatedAt
+        };
+
+        res.status(200).json({
+            status: "success",
+            data: currentUser
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: "error",
+            message: error.message
+        });
+    }
+};
+
 export {
   postUser,
   loginHandler,
@@ -419,4 +446,5 @@ export {
   editUser,
   getUserById,
   getAllUsers,
+  getCurrentUser
 };

@@ -11,6 +11,7 @@ import {
   editUser,
   getUserById,
   getAllUsers,
+  getCurrentUser
 } from "../controllers/userController.js";
 
 // REGISTER USER
@@ -27,6 +28,9 @@ router.post("/logout", verifyToken, logoutHandler);
 
 // ENDPOINT TOKEN REFRESH
 router.get('/refresh', refreshToken);
+
+// GET CURRENT USER
+router.get('/me', getCurrentUser);
 
 // GET USER BY ID
 router.get("/:id", getUserById);
