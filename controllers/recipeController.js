@@ -255,13 +255,13 @@ const getRecipeById = async (req, res) => {
             include: [
                 {
                     model: User,
-                    attributes: ['id', 'username', 'profilePicture']
+                    attributes: ['id', 'username', 'profilePicture', 'headline']
                 },
                 {
                     model: Comment,
                     include: [{
                         model: User,
-                        attributes: ['id', 'username', 'profilePicture', 'headline']
+                        attributes: ['id', 'username', 'profilePicture']
                     }],
                     order: [['createdAt', 'DESC']]
                 }
