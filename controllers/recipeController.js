@@ -98,35 +98,22 @@ const updateRecipe = async (req, res) => {
             instructions: instructions || recipe.instructions
         };
 
-        // Hanya proses upload jika ada file baru
         if (file) {
-            try {
-                // Hapus gambar lama jika ada
-                if (recipe.imageUrl) {
-                    const publicId = recipe.imageUrl.split('/').pop().split('.')[0];
-                    await cloudinary.uploader.destroy(`Recipe-App/Recipe_Images/${publicId}`);
-                }
-
-                // Upload gambar baru
-                const uploadResult = await cloudinary.uploader.upload(file.path, {
-                    folder: "Recipe-App/Recipe_Images",
-                    use_filename: true,
-                    unique_filename: false
-                });
-                
-                updatedFields.imageUrl = uploadResult.secure_url;
-                
-                // Hapus file temporary setelah upload
-                fs.unlink(file.path, (err) => {
-                    if (err) console.error("Failed to delete temp file:", err);
-                });
-            } catch (uploadError) {
-                console.error("Upload error:", uploadError);
-                return res.status(500).json({
-                    status: "error",
-                    message: "Failed to upload image"
-                });
+            if (recipe.imageUrl) {
+                const publicId = recipe.imageUrl.split('/').pop().split('.')[0];
+                await cloudinary.uploader.destroy(`Recipe-App/Recipe_Images/${publicId}`);
             }
+
+            const uploadResult = await cloudinary.uploader.upload(file.path, {
+                folder: "Recipe-App/Recipe_Images",
+                use_filename: true,
+                unique_filename: false
+            });
+            updatedFields.imageUrl = uploadResult.secure_url;
+            
+            fs.unlink(file.path, (err) => {
+                if (err) console.error("Failed to delete temp file:", err);
+            });
         }
 
         await recipe.update(updatedFields);
@@ -143,7 +130,6 @@ const updateRecipe = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Update recipe error:", error);
         res.status(500).json({
             status: "error",
             message: error.message
